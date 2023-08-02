@@ -18,3 +18,21 @@ front:
   ingress:
     tlsEnabled: true
     host: front.phappy.takima.school
+
+api:
+  enabled: true
+  image:
+    repository: registry.gitlab.com/takima-school/images/cdb/api
+    tag: latest
+  replicaCount: 3
+  ingress:
+    tlsEnabled: true
+    host: cdb-api.phappy.takima.school
+
+pg:
+  enabled: true
+  operator:
+    enableLogicalBackup: true
+    numberOfInstances: 2
+    volumeSize: 1Gi
+  replicaCount: 3

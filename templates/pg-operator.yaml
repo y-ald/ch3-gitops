@@ -1,0 +1,21 @@
+{{- if .Values.pg.enabled }}
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: {{ .Values.name }}-pg
+spec:
+  enableLogicalBackup: {{ .Values.pg.operator.enableLogicalBackup }}
+  logicalBackupSchedule: 30 00 * * *
+  teamId: {{ .Values.name }}
+  volume:
+    size: {{ .Values.pg.operator.volumeSize }}
+  numberOfInstances: {{ .Values.pg.operator.numberOfInstances }}
+  users:
+    cdb:
+      - superuser
+      - createdb
+  databases:
+    cdb: cdb  # dbname: owner
+  postgresql:
+    version: "14"
+{{- end }}
