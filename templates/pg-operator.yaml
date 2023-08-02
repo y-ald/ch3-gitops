@@ -2,11 +2,11 @@
 apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
-  name: {{ .Values.name }}-pg
+  name: {{ include ("MyAppCtx.fullname") . }}-pg
 spec:
   enableLogicalBackup: {{ .Values.pg.operator.enableLogicalBackup }}
   logicalBackupSchedule: 30 00 * * *
-  teamId: {{ .Values.name }}
+  teamId: {{ include ("MyAppCtx.fullname") . }}
   volume:
     size: {{ .Values.pg.operator.volumeSize }}
   numberOfInstances: {{ .Values.pg.operator.numberOfInstances }}

@@ -7,8 +7,8 @@
   {{- end }}  
 apiVersion: v1  
 kind: ConfigMap  
-metadata:  
-  name: {{ .Values.name }}-front  
+metadata:
+  name: {{ include ("MyAppCtx.fullname") . }}-front
 data:  
   API_URL: {{ $apiUrl }}  
 {{- end }}

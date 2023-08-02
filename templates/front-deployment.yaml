@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-front
+  name: {{ include ("MyAppCtx.fullname") . }}-front
   labels:
     app: front
 spec:
@@ -12,6 +12,8 @@ spec:
       app: front
   template:
     metadata:
+      annotations: 
+        checksum/config: {{ include (print $.Template.BasePath "/api-config.yaml") . | sha256sum }}
       labels:
         app: front
     spec:
@@ -63,6 +65,6 @@ spec:
           - name: API_URL
             valueFrom:
               configMapKeyRef:
-                name: {{ .Values.name }}-front
+                name: {{ include ("MyAppCtx.fullname") . }}-front
                 key: API_URL
 {{- end }}

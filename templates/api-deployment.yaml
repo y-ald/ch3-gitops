@@ -2,45 +2,47 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}-api
+  name: {{ include ("MyAppCtx.fullname") . }}-api
   labels:
-    app: {{ .Values.name }}-api
+    app: {{ include ("MyAppCtx.fullname") . }}-api
 spec:
   replicas: {{ .Values.api.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.name }}-api
+      app: {{ include ("MyAppCtx.fullname") . }}-api
   template:
     metadata:
+      annotations: 
+        checksum/config: {{ include (print $.Template.BasePath "/api-config.yaml") . | sha256sum }}
       labels:
-        app: {{ .Values.name }}-api
+        app: {{ include ("MyAppCtx.fullname") . }}-api
     spec:
       securityContext:
         runAsUser: 1001
         runAsGroup: 1001
       containers:
-      - name: {{ .Values.name }}-api
+      - name: {{ include ("MyAppCtx.fullname") . }}-api
         image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
         env:
         - name: DB_ENDPOINT
           valueFrom:
             configMapKeyRef:
-              name: {{ .Values.name }}-api
+              name: {{ include ("MyAppCtx.fullname") . }}-api
               key: db_endpoint
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:
-              name: {{ .Values.name }}-api
+              name: {{ include ("MyAppCtx.fullname") . }}-api
               key: db_name
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.name }}.{{ .Values.name }}-pg.credentials.postgresql.acid.zalan.do
+              name: {{ include ("MyAppCtx.fullname") . }}.{{ include ("MyAppCtx.fullname") . }}-pg.credentials.postgresql.acid.zalan.do
               key: username
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.name }}.{{ .Values.name }}-pg.credentials.postgresql.acid.zalan.do
+              name: {{ include ("MyAppCtx.fullname") . }}.{{ include ("MyAppCtx.fullname") . }}-pg.credentials.postgresql.acid.zalan.do
               key: password
         ports:
         - containerPort: 8080
